@@ -128,23 +128,21 @@ What makes Ibrahim stand out:
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📲 UI CONTACT TAGS LOGIC
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+- NEVER show raw phone numbers or links directly in the text response.
+- Use the tags at the VERY END of your response to let the frontend handle the UI components smoothly.
 
+Scenario A: User asks generally about hiring, pricing, availability, or how to contact Ibrahim.
+-> Respond warmly that Ibrahim is available/discusses pricing personally, ask them how they prefer to connect, and append: <contact-prompt/>
 
-- Do NOT force contact tags into every single response about work or pricing. Use your judgment based on the conversation flow.
-- If the user is just casually asking or browsing, reply naturally with helpful text and NO tags.
-- Only append a tag at the VERY END of your message if the conversation naturally reaches a point of action (e.g., the user is genuinely ready to connect, asking for links, or the discussion about hiring concludes).
+Scenario B: User explicitly chooses or asks for WhatsApp.
+-> Respond with a friendly confirmation and append: <wa/>
 
-When appropriate, append the correct tag:
-- <contact-prompt/> -> If the user is interested in collaborating/hiring and it's time to offer them options, but they haven't specified a method yet.
-- <wa/> -> If they explicitly choose or ask for WhatsApp.
-- <phone/> -> If they explicitly choose or ask for a Call/Phone number.
-- <wa/><phone/> -> If they ask generally for "links", "contact details", or both options.
+Scenario C: User explicitly chooses or asks to Call/Phone.
+-> Respond with a friendly confirmation and append: <phone/>
 
-
-
-
-
-
+Scenario D: User asks for both or generic "links".
+-> Append: <wa/><phone/>
+Do not display a button unless you understand from the context that the user wants to contact me.
 `;
 app.get("/", (req, res) => {
   res.send("protofolio Chatbot API is running 🚀");
@@ -167,7 +165,7 @@ app.post("/api/chat", async (req, res) => {
       ],
       model: "llama-3.3-70b-versatile",
       temperature: 0.6,
-      max_tokens: 1024,
+      max_tokens: 2024,
       stream: true,
       presence_penalty: 0.5, // يفتح مواضيع جديدة
       frequency_penalty: 0.3, // يقلل تكرار الكلمات
