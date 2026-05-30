@@ -17,7 +17,7 @@ dotenv.config();
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000, // دقيقة واحدة
   max: 20, // مسموح بـ 20 رسائل فقط كل دقيقة لكل IP
-  message: { error: "Too many requests, slow down your coffee ritual." },
+  message: { error: "Too many requests, slow down your protofolio ritual." },
 });
 
 const app = express();
@@ -167,7 +167,7 @@ If user chooses both or says "both" → end reply with: <wa/><phone/>
 The frontend will detect these tags and render the buttons automatically.
 `;
 app.get("/", (req, res) => {
-  res.send("al-minshawi Chatbot API is running 🚀");
+  res.send("protofolio Chatbot API is running 🚀");
 });
 // API Endpoint مع دعم الـ Streaming
 app.post("/api/chat", async (req, res) => {
@@ -180,7 +180,6 @@ app.post("/api/chat", async (req, res) => {
       (m) => m.content && m.content.trim() !== "",
     );
 
-    // طلب الرد من Groq مع تفعيل خاصية الـ Stream
     const stream = await groq.chat.completions.create({
       messages: [
         { role: "system", content: systemPrompt },
@@ -190,6 +189,8 @@ app.post("/api/chat", async (req, res) => {
       temperature: 0.6,
       max_tokens: 1024,
       stream: true,
+      presence_penalty: 0.5, // يفتح مواضيع جديدة
+      frequency_penalty: 0.3, // يقلل تكرار الكلمات
     });
 
     // إعداد الـ Headers للسماح بالبث المباشر (Streaming) للبيانات
@@ -210,7 +211,7 @@ app.post("/api/chat", async (req, res) => {
     console.error("Groq Error:", error);
     // إذا حدث خطأ قبل بدء الإرسال، نرسل خطأ 500
     if (!res.headersSent) {
-      res.status(500).json({ error: "erro in coffe chat bot" });
+      res.status(500).json({ error: "erro in protofolio chat bot" });
     } else {
       // إذا حدث الخطأ أثناء البث، ننهي الاتصال
       res.end();
